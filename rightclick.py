@@ -3,7 +3,13 @@
 # rightclick.py
 # Automatically acquire whole NFT collections from OpenSea.
 #
-# k0rnh0li0 2021
+# This is a modified version of the auto acquiring NFT script
+# written by k0rnh0li0 2021 as the function that listed the prices
+# would cause the script to crash for some reason.
+# 
+# With this part removed the script runs without stopping.
+# 
+# Edited by Scrobwofl
 
 import os
 import sys
@@ -96,12 +102,6 @@ def download_asset(collection, asset):
     # Will be zero if no one was dumb enough to buy it yet
     last_price = 0
 
-    if asset["last_sale"] is not None:
-        token_price_usd = float(asset["last_sale"]["payment_token"]["usd_price"])
-        token_decimals = asset["last_sale"]["payment_token"]["decimals"]
-        total_price = int(asset["last_sale"]["total_price"]) / 10**(token_decimals)
-        last_price = int(total_price * token_price_usd)
-
     # Download asset content
     req = requests.get(asset_url, stream=True)
 
@@ -119,6 +119,7 @@ def download_asset(collection, asset):
 
     if os.path.exists(output_file):
         # File already exists - don't re-download it
+        print(f"{asset_name} - Exists")
         return
 
     with open(output_file, "wb") as f:
@@ -127,9 +128,7 @@ def download_asset(collection, asset):
                 f.write(chunk)
 
     if not QUIET:
-        print(f"{asset_name} - ${last_price}")
-
-    usd_total += last_price
+        print(f"{asset_name} - Downloading")
 
 def parse_flag(flag):
     flag = flag.split("=")
@@ -146,17 +145,14 @@ def parse_flag(flag):
         exit()
 
 def finish():
-    print(f"\nYou acquired ${usd_total} worth of NFTs!\n")
+    print(f"Finished")
     exit()
 
 def sig_handler(num, frame):
     finish()
 
 if __name__ == "__main__":
-    print("nft-rightclicker")
-    print("All your NFTs are mine now!")
-    print("k0rnh0li0 2021")
-    print("https://twitter.com/gr8_k0rnh0li0\n")
+    print("downloading")
 
     if len(sys.argv) < 2:
         print("At least one NFT collection must be specified.")
