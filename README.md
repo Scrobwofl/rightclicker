@@ -1,3 +1,5 @@
+This is an amended version of the original script that does not not crash and can run in one session without needing to be restarted. Thanks for your work K0rn0li0 2021 - it's just a small tweak!
+
 # rightclicker
 This simple script automatically downloads entire NFT collections from OpenSea. Now you can collect JPEGs without burning the planet down!
 
